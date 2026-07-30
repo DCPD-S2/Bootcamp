@@ -1,0 +1,4 @@
+2026/07/25 11:03:19 [error] 31#31: *14 client intended to send too large body:
+15728640 bytes, client: 192.168.1.44, request: "POST /upload HTTP/1.1",
+host: "localhost:8080"
+2026/07/25 11:04:02 [info] 31#31: *15 POST /upload 201

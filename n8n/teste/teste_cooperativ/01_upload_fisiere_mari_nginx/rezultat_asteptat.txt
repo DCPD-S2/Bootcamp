@@ -1,0 +1,10 @@
+Problema principală:
+Nginx limitează cererile la 10 MB prin client_max_body_size 10m,
+deși aplicația acceptă 50 MB. Cererea este respinsă înainte să ajungă în Flask.
+
+Remediere:
+Setează aceeași limită în Nginx și aplicație, de exemplu:
+client_max_body_size 50m;
+
+Nu este o problemă de proxy_read_timeout, pentru că eroarea apare înainte
+ca aplicația să înceapă procesarea.

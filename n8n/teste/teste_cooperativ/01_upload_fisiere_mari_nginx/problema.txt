@@ -1,0 +1,3 @@
+Fișierele mici se încarcă fără probleme, dar fișierele mai mari de aproximativ 10 MB
+eșuează imediat. Aplicația acceptă până la 50 MB, iar în logul aplicației nu apare
+nicio cerere pentru fișierele care eșuează.

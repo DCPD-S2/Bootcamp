@@ -1,0 +1,7 @@
+2026-07-25 16:10:00 INFO event=1001 status=201
+2026-07-25 16:10:01 WARN event=1002 status=429 retry_after=30
+2026-07-25 16:10:01 WARN event=1002 status=429 retry_after=30
+2026-07-25 16:10:01 WARN event=1002 status=429 retry_after=30
+2026-07-25 16:10:01 WARN event=1002 status=429 retry_after=30
+2026-07-25 16:10:01 WARN event=1002 status=429 retry_after=30
+2026-07-25 16:10:02 WARN account_rate_limited_for=120

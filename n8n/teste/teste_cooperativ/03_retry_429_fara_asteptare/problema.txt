@@ -1,0 +1,3 @@
+Un script trimite evenimente către un API extern. Când API-ul răspunde cu 429,
+numărul cererilor crește foarte repede și blocarea durează mai mult.
+Fișierul de intrare are aproximativ 20.000 de linii.

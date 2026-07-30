@@ -1,0 +1,2 @@
+După câteva cereri invalide, API-ul începe să răspundă cu 500 la toate cererile.
+Repornirea containerului rezolvă temporar problema.

@@ -1,0 +1,7 @@
+Problema principală:
+Conexiunea este returnată în pool numai pe ramura de succes.
+La excepție se face rollback, dar lipsește pool.putconn(connection).
+
+Remediere:
+Returnează conexiunea într-un bloc finally și închide cursorul acolo.
+Astfel, conexiunea este eliberată indiferent dacă cererea reușește sau nu.
