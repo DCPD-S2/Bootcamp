@@ -1,0 +1,1103 @@
+{
+  "name": "Agent_documente",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=User request: {{$json.chatInput}}\nPlease analyze and summarize the following text chunk from the uploaded pdf:\n{{ $json.chunk }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant specialized in document analysis and summarization.\nUse the user's request to tailor your output."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        448
+      ],
+      "id": "d7a1b811-81ce-4d18-9be9-ec5b7a35ef60",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "data0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1184,
+        464
+      ],
+      "id": "fbaab96d-7e9f-4a8b-b40e-d0ba5e32d2c1",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -336,
+        464
+      ],
+      "id": "ba0ab77e-40f1-456a-932b-9e881d23e2d5",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        544
+      ],
+      "id": "f0e3766d-d1cc-4b28-841c-184d5a5bff19"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        272,
+        464
+      ],
+      "id": "d90c0f76-57dd-4679-b7fd-133f72e24b27",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0b0b642-e119-405d-9f00-b06216f3d0d5",
+              "name": "text",
+              "value": "={{ $items().map(item => item.json.output || '').join('\\n\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        464
+      ],
+      "id": "03cc37d9-16b4-4304-a3bb-758d4b183386",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {
+          "allowFileUploads": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1584,
+        528
+      ],
+      "id": "ed3d87a5-54c6-41c4-9d06-fad23b21696b",
+      "name": "When chat message received",
+      "webhookId": "688e7839-8418-48b2-ac3c-ba8d45d1ded8"
+    },
+    {
+      "parameters": {
+        "chunkingMode": "advanced",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2.1,
+      "position": [
+        192,
+        688
+      ],
+      "id": "9c8f9743-019e-433b-afd9-cd2f3ea5bf38",
+      "name": "Summarization Chain"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 10,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        384,
+        864
+      ],
+      "id": "73392b5f-43c7-4b0d-b7f9-d439750ab3af",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "77fc7eeb-9d8c-448e-8677-4ce81f5a3571",
+              "name": "Rezumat:",
+              "value": "={{ $json.output.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        688
+      ],
+      "id": "87afd603-4bc2-440d-b11d-a02beb3ff228",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f6f4d6ab-a1c2-4b75-9212-edaf9a2ed412",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -384,
+        768
+      ],
+      "id": "78fe7baa-fb74-48bf-86da-598a9d3b893b",
+      "name": "Format Chat Response1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "01944052-497d-4ca9-8ee0-2da96b5ef6bb",
+                    "leftValue": "={{ $json.chatInput }}",
+                    "rightValue": "generate code",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1216,
+        672
+      ],
+      "id": "18841d20-0137-4a31-9ebb-602bec282d9a",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant. \n###Tools\nPlease use the google-search tool if you don't know the answer."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -816,
+        704
+      ],
+      "id": "04d3db6b-6364-47b8-8b7d-a65294dcc178",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -720,
+        896
+      ],
+      "id": "154db26e-e618-4e01-9d0b-01a5f39b38b4",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d934f6dc-f1a3-4f32-b164-ae74be88c360",
+              "leftValue": "={{ $json.files[0] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1360,
+        528
+      ],
+      "id": "b916f71d-137b-4cc3-adb5-7400bfd14175",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.first().json.chatInput.toLowerCase();\n\n// Regex to extract language, task, and filename\nconst regex = /generate code in (\\w+) that is doing (.+)$/i;\nconst match = text.match(regex);\n\nif (!match) {\n  throw new Error('Input must be in format: generate code in {language} that is doing {task} ');\n}\n\nconst language = match[1].toLowerCase();\nconst task = match[2].trim();\n\nreturn [{\n  json: {\n    language,\n    task,\n\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1184,
+        1072
+      ],
+      "id": "62fa2f93-bb6c-43eb-9798-0bfd487b25e4",
+      "name": "Parse user input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "options": {
+          "systemMessage": "Your role is to be the best computer programming expert.\nYour response has to have only the programming code, NO extra characters at the begining of the response "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -576,
+        1072
+      ],
+      "id": "a0ddb77a-776b-4d0d-b733-2df2951f2fb6",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -736,
+        464
+      ],
+      "id": "f14ef2dc-a487-497b-a4ba-732636d08dd4",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.chatInput }}",
+                    "rightValue": "intrebare:",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    },
+                    "id": "75f0c08d-e04c-490a-85b9-32d81fb8f799"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b1a9309d-c3ac-4015-8a68-791949c01a44",
+                    "leftValue": "={{ $json.chatInput }}",
+                    "rightValue": "sumarizeaza",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -576,
+        464
+      ],
+      "id": "a2a1e96d-f9b2-4913-b049-d1a33b1b740a",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        64,
+        192
+      ],
+      "id": "9c0349b4-768c-4b1b-8d66-3cc573d8ed9c",
+      "name": "AI Agent4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "77fc7eeb-9d8c-448e-8677-4ce81f5a3571",
+              "name": "Rezumat:",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        208
+      ],
+      "id": "2cf5d720-4655-41cf-86a2-49c8ce4db074",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "model": "qwen3-vl:4b-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        0,
+        320
+      ],
+      "id": "35b8d9af-80d6-4043-a2aa-26f08fa777b4",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "11iv0M5WphTOvlVY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen3-vl:4b-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        640
+      ],
+      "id": "022c03de-342e-4f98-98aa-cdc73f1d6e85",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "11iv0M5WphTOvlVY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen3-vl:4b-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        160,
+        864
+      ],
+      "id": "1e1d78d2-2f88-4533-9a36-ce27873d7442",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "11iv0M5WphTOvlVY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen3-vl:4b-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        864
+      ],
+      "id": "c2d12285-17c7-4332-912a-882103f7d40c",
+      "name": "Ollama Chat Model2",
+      "credentials": {
+        "ollamaApi": {
+          "id": "11iv0M5WphTOvlVY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen3-vl:4b-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        1264
+      ],
+      "id": "1db43bb5-857d-4c3e-b5db-9aea1937cc66",
+      "name": "Ollama Chat Model3",
+      "credentials": {
+        "ollamaApi": {
+          "id": "11iv0M5WphTOvlVY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Sumarizare a unui document pe bucăți",
+        "height": 80
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        528,
+        864
+      ],
+      "typeVersion": 1,
+      "id": "575f96fa-a479-4c7e-8f6e-ef254870b6a3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Intrebare din document\n",
+        "height": 80
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "1c52c4ca-3587-4cd6-890e-84235dc6f292",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Impărțirea în bucăți a textului(chunks)",
+        "height": 96,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -912,
+        352
+      ],
+      "typeVersion": 1,
+      "id": "56b52a80-e8dc-4431-b289-1b2f8deec8ea",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Cauta cele mai bune 3 chunk-uri dupa scor(numarul de cuvinte din intrebare care apar in chunk)",
+        "height": 144,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "e3066593-2504-44fd-b8a2-7c0bc3a66e06",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Defensive: check we have items input\nif (!items || items.length === 0) {\n  throw new Error('No input items received');\n}\n\n// Extract user question from first item (all should be the same)\nconst userQuestionRaw = items[0].json.chatInput || '';\nconst userQuestion = userQuestionRaw.toLowerCase();\n\n// Helper: tokenize string to array of words (lowercased, punctuation removed)\nfunction tokenize(text) {\n  return text.replace(/[.,?!:;]/g, '').toLowerCase().split(/\\s+/).filter(Boolean);\n}\n\n// Get tokens for question\nconst qTokens = new Set(tokenize(userQuestion));\n\n// Score and rank chunks by keyword overlap with question\nconst scored = items.map(item => {\n  const chunkText = item.json.chunk || '';\n  const chunkTokens = new Set(tokenize(chunkText));\n  // Count common tokens between chunk and question\n  const commonCount = [...qTokens].filter(token => chunkTokens.has(token)).length;\n  return {\n    json: item.json, // pass whole json object forward\n    score: commonCount\n  };\n});\n\n// Sort descending by score to get most relevant chunks first\nscored.sort((a, b) => b.score - a.score);\n\n// Choose top 3 chunks with highest score (or fewer if less than 3)\nconst topChunks = scored.slice(0, 3).map(chunk => ({\n  json: {\n    chunk: chunk.json.chunk,\n    sessionId: chunk.json.sessionId,\n    chatInput: chunk.json.chatInput\n  }\n}));\n\n// Return top chunk items as output for next node\nreturn topChunks;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        272
+      ],
+      "id": "7f5e62cf-366a-41b2-9621-acea0dae8a34",
+      "name": "Sortare_scor"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.text || '';\nconst chunkSize = 1000;\nconst overlap = 200;\nconst chunks = [];\n\nlet start = 0;\nwhile (start < text.length) {\n  let end = start + chunkSize;\n  if (end > text.length) end = text.length;\n\n  const chunk = text.substring(start, end);\n  chunks.push({ json: { chunk, sessionId: $json.sessionId, chatInput: $json.chatInput } });\n\n  start += chunkSize - overlap;\n}\n\nreturn chunks;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        464
+      ],
+      "id": "50b42956-ff0f-492c-bb17-55f31e40733d",
+      "name": "Chunk-ing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6ddc8860-b11b-4fc3-92fa-7ca4aeb38b0c",
+              "name": "sessionId",
+              "value": "={{ $('When chat message received').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "178971f1-3c67-4f3a-b21a-44f102b5912d",
+              "name": "chatInput",
+              "value": "={{ $('When chat message received').item.json.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "bdcbdfe7-47e8-47a3-b3a1-3688ef2ef63a",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1024,
+        464
+      ],
+      "id": "6c218576-9993-4478-ac72-7df1c54e54af",
+      "name": "Extragere text"
+    },
+    {
+      "parameters": {
+        "content": "Realizare prompt ",
+        "height": 80,
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "47d53d44-73c2-4313-bf80-420900f2d9ed",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "jsCode": "const userQuestion = $json.chatInput;\nconst contextChunks = items.map(i => i.json.chunk).join('\\n\\n---\\n\\n');\nconst prompt = `You are an expert assistant. Use only these excerpts to answer the question:\n\nDocument excerpts:\n${contextChunks}\n\nUser question:\n${userQuestion}\n\nYour answer:\n`;\nreturn [{ json: { prompt } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        208
+      ],
+      "id": "0f683ddd-47fe-4e88-9797-eb0021d5ce44",
+      "name": "Prompt-ing"
+    },
+    {
+      "parameters": {
+        "content": "EXtragere language si task",
+        "height": 96,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1216,
+        1008
+      ],
+      "typeVersion": 1,
+      "id": "df2beb83-6d3e-4175-bff6-08306a49ef83",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Construieste prompt de generare ",
+        "height": 112,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        992
+      ],
+      "typeVersion": 1,
+      "id": "f5c06e82-e146-4804-b0fc-9011f350998f",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst language = $input.first().json.language;\nconst task = $input.first().json.task;\n\n// Build AI prompt\nconst prompt = `Generate a ${language} code snippet that ${task}. Provide only the code without explanation.`;\n\n// Return all data for next nodes\nreturn [{\n  json: {\n    language,\n    task,\n    prompt,\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        1072
+      ],
+      "id": "b2690411-4d04-4c6d-87c1-50df5211fe12",
+      "name": "Prompt-ing1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c09bb63a-cd48-4d19-b776-9219628e2aac",
+              "name": "sessionId",
+              "value": "={{ $('When chat message received').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "b9f24685-7b99-42aa-a55e-4c6002c52245",
+              "name": "prompt",
+              "value": "={{ $json.prompt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -800,
+        1072
+      ],
+      "id": "30d8ebca-982e-4bbe-b210-7f7cf161a783",
+      "name": "Extrage prompt din output"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Extragere text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarization Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Parse user input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Format Chat Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse user input": {
+      "main": [
+        [
+          {
+            "node": "Prompt-ing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Sortare_scor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sortare_scor": {
+      "main": [
+        [
+          {
+            "node": "Prompt-ing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chunk-ing": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extragere text": {
+      "main": [
+        [
+          {
+            "node": "Chunk-ing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt-ing": {
+      "main": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt-ing1": {
+      "main": [
+        [
+          {
+            "node": "Extrage prompt din output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrage prompt din output": {
+      "main": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1db0f99a-bf60-420c-bb68-43eedaf3243b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "129a823149e7180f847626bd1aac2769b06c4c532af4e8fd78e5a260f3e302b7"
+  },
+  "nodeGroups": [],
+  "id": "b7gymeGkjf6FQkdO",
+  "tags": []
+}
