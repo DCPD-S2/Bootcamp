@@ -1,0 +1,157 @@
+services:
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+
+    ports:
+      - "8888:8080"
+
+    volumes:
+      - ./searxng/config:/etc/searxng
+      - ./searxng/data:/var/cache/searxng
+
+    environment:
+      SEARXNG_BASE_URL: "http://localhost:8888/"
+
+    networks:
+      - digital-lab-network
+
+
+  url-inspector:
+    build:
+      context: ./url-inspector
+
+    container_name: url-inspector
+    restart: unless-stopped
+
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+
+    tmpfs:
+      - /tmp:size=256m
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    mem_limit: 1g
+
+    environment:
+      LAB_ALLOW_HOSTS: phishing-sim,collector
+      NAVIGATION_TIMEOUT_MS: "60000"
+      DNS_RETRIES: "4"
+      MAX_REDIRECTS: "5"
+
+    networks:
+      - digital-lab-network
+
+
+  qr-decoder:
+    build:
+      context: ./qr-decoder
+
+    container_name: qr-decoder
+    restart: unless-stopped
+
+    environment:
+      PORT: "8082"
+
+    mem_limit: 512m
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    networks:
+      - digital-lab-network
+
+
+  postgres:
+    image: postgres:16
+    container_name: digital-lab-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - digital-lab-network
+
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: digital-lab-n8n
+    restart: unless-stopped
+
+    ports:
+      - "5678:5678"
+
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      TZ: ${GENERIC_TIMEZONE}
+
+      N8N_SECURE_COOKIE: "false"
+
+      TEXT_MODEL: ${TEXT_MODEL}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL}
+      LAB_MODE: ${LAB_MODE}
+      VISION_ENABLED: ${VISION_ENABLED}
+
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./cases:/files/cases
+      - ./workflows:/files/workflows
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      searxng:
+        condition: service_started
+
+      url-inspector:
+        condition: service_started
+
+      qr-decoder:
+        condition: service_started
+
+    networks:
+      - digital-lab-network
+
+
+volumes:
+  postgres_data:
+  n8n_data:
+
+
+networks:
+  digital-lab-network:
+    driver: bridge
