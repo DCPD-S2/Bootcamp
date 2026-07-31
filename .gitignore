@@ -1,0 +1,22 @@
+# Mediu virtual
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Variabile de mediu
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Loguri
+*.log
+
+# Fișiere temporare
+.DS_Store
+Thumbs.db
