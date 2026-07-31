@@ -1,0 +1,16 @@
+﻿record_id,customer_name,email,company,country,customer_status,product_name,quantity,unit_price,order_status,ordered_at,ticket_subject,ticket_priority,ticket_status
+1,Andrei Popescu,andrei.popescu@example.ro,TechNova,Romania,active,Monitoring Pro,2,149.0,completed,2026-07-01 10:00:00,Webhook timeout,high,in_progress
+2,Maria Ionescu,maria.ionescu@example.ro,Urban Green,Romania,active,Workflow Starter,1,89.0,processing,2026-07-05 12:30:00,Export CSV incomplet,medium,open
+3,Victor Dumitru,victor.dumitru@example.ro,SecureOps,Romania,active,Security Audit Pack,1,299.0,completed,2026-07-08 09:20:00,Alertă fals pozitivă,high,resolved
+4,Andrei Popescu,andrei.popescu@example.ro,TechNova,Romania,active,Log Analytics Add-on,3,59.0,shipped,2026-07-10 15:10:00,Dashboard lent,medium,closed
+5,Luca Bianchi,luca.bianchi@example.it,CloudWorks,Italy,active,Automation Enterprise,1,499.0,new,2026-07-15 08:45:00,Conectare Ollama,critical,open
+6,Elena Marin,elena.marin@example.ro,EduLab,Romania,prospect,Workflow Starter,1,89.0,cancelled,2026-07-18 17:25:00,Întrebare configurare,low,open
+7,Maria Ionescu,maria.ionescu@example.ro,Urban Green,Romania,active,Monitoring Pro,1,149.0,completed,2026-07-20 11:40:00,Integrare webhook,medium,in_progress
+8,Victor Dumitru,victor.dumitru@example.ro,SecureOps,Romania,active,Incident Response Add-on,2,129.0,processing,2026-07-24 13:15:00,Regulă alertare,high,open
+9,Sofia Keller,sofia.keller@example.de,DataBridge,Germany,inactive,Data Connector,1,119.0,completed,2026-06-20 10:10:00,Cont inactiv,low,closed
+10,Radu Georgescu,radu.georgescu@example.ro,NetVision,Romania,active,Workflow Starter,2,89.0,completed,2026-07-02 14:00:00,Eroare autentificare,high,resolved
+11,Ioana Pavel,ioana.pavel@example.ro,SmartCity,Romania,active,Monitoring Pro,1,149.0,shipped,2026-07-03 09:30:00,Metrici lipsă,medium,open
+12,Mihai Stan,mihai.stan@example.ro,EduCore,Romania,prospect,Security Audit Pack,1,299.0,new,2026-07-06 16:45:00,Cerere ofertă,low,open
+13,Ana Dobre,ana.dobre@example.ro,GreenLogix,Romania,active,Automation Enterprise,1,499.0,processing,2026-07-11 11:20:00,Workflow blocat,critical,in_progress
+14,George Ilie,george.ilie@example.ro,FinCloud,Romania,active,Log Analytics Add-on,2,59.0,completed,2026-07-13 13:10:00,Indexare lentă,medium,resolved
+15,Diana Stoica,diana.stoica@example.ro,MedData,Romania,active,Data Connector,3,119.0,completed,2026-07-16 08:50:00,Conectare PostgreSQL,high,open

@@ -1,0 +1,15 @@
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  upload-api:
+    build: ./upload-api
+    volumes:
+      - uploads:/data/uploads
+
+volumes:
+  uploads:

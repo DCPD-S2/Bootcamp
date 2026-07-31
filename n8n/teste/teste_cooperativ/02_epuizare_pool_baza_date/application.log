@@ -1,0 +1,7 @@
+2026-07-25 14:00:00 INFO POST /orders status=201
+2026-07-25 14:00:10 INFO POST /orders status=400 error="could not convert string to float"
+2026-07-25 14:00:20 INFO POST /orders status=400 error="missing customer"
+2026-07-25 14:00:30 INFO POST /orders status=400 error="could not convert string to float"
+2026-07-25 14:00:40 INFO POST /orders status=400 error="missing amount"
+2026-07-25 14:00:50 INFO POST /orders status=400 error="missing customer"
+2026-07-25 14:01:00 ERROR POST /orders status=500 error="connection pool exhausted"

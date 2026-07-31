@@ -1,0 +1,12 @@
+Problema principală:
+Pentru 429, codul reia imediat cererea fără pauză și ignoră Retry-After.
+Cele 5 încercări sunt trimise aproape instantaneu, agravând limitarea.
+
+Remediere:
+Citește headerul Retry-After și așteaptă înainte de retry.
+Folosește backoff limitat dacă headerul lipsește.
+
+Observații corecte:
+- procesarea linie cu linie este eficientă pentru memorie;
+- json.loads(line) nu încarcă tot fișierul;
+- requests.Session și timeoutul sunt deja implementate corect.
