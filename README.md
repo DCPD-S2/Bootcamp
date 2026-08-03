@@ -7,7 +7,7 @@ După pornirea aplicației **Docker Desktop**, deschideți folderul `n8n` și da
 
 ```text
 start.bat
-
+```
 Interfata n8n se poate accesa prin link-ul: http://localhost:5678
 
 Înainte de utilizarea workflow-urilor, asigurați-vă că aplicația **Ollama** este pornită.
