@@ -65,5 +65,4 @@ class SystemTools:
 
         return (
             f"Bateria este la {percent:.0f}% și {status}. "
-            f"Timp estimat rămas: {time_left}."
         )
