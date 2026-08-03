@@ -1,3 +1,22 @@
+# N8N Lab
+
+Repository-ul conține un mediu local n8n, pornit prin Docker in folderul denumit n8n.
+Pentru pornirea mediului este necesar prima data sa va asigurati ca aveti pornita aplicatia **Docker Desktop**.
+
+După pornirea aplicației **Docker Desktop**, deschideți folderul `n8n` și dați dublu clic pe fișierul:
+
+```text
+start.bat
+
+Interfata n8n se poate accesa prin link-ul: http://localhost:5678
+
+Înainte de utilizarea workflow-urilor, asigurați-vă că aplicația **Ollama** este pornită.
+
+Credentialele pentru ollama din n8n sunt urmatoarele: http://host.docker.internal:11434
+
+
+**Felicitari! Ati pornit interfata n8n 🎊🎊🎉**
+
 # Local AI Assistant
 
 Local AI Assistant este un asistent AI construit în Python, bazat pe Ollama și LangGraph, care utilizează o arhitectură multi-agent pentru rezolvarea diferitelor tipuri de cereri.
