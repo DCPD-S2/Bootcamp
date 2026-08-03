@@ -105,7 +105,7 @@ Dacă aceste câmpuri nu sunt completate, aplicația funcționează în continua
 ### 6. Rulează aplicația
 
 ```bash
-python app.my
+python app.py
 python main.py
 ```
 
