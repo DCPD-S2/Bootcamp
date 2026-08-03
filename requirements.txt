@@ -37,3 +37,6 @@ lxml==6.1.1
 psutil==7.2.2
 python-dotenv==1.2.2
 pathvalidate==3.3.1
+
+# Diplome
+python-pptx
